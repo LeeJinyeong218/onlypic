@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id(map: "user_pk") @db.VarChar(21)
+  nickname            String   @unique(map: "user_unique") @db.VarChar(10)
+  email               String   @unique(map: "user_unique_email") @db.VarChar(320)
+  password            String   @db.VarChar(64)
+  profile_picture_url String?
+  report              BigInt   @default(0)
+  createdAt           DateTime @default(now()) @db.Timestamp(6)
+  updatedAt           DateTime @default(now()) @updatedAt @db.Timestamp(6)
+}
+
+model Pic {
+  id        String   @id(map: "pic_pk") @db.VarChar(21)
+  user_id   String   @db.VarChar(21)
+  report    BigInt   @default(0)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+}
+
+model Picture {
+  id        String   @id(map: "picture_pk") @db.VarChar(21)
+  pic_id    String   @db.VarChar(21)
+  url       String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+}
+
+model Hashtag {
+  id        BigInt   @id(map: "hashtag_pk")
+  name      String   @db.VarChar(10)
+  count     BigInt
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+}
+
+model PicHashtag {
+  id         BigInt   @id(map: "pichashtag_pk")
+  pic_id     String   @db.VarChar(21)
+  hashtag_id BigInt
+  createdAt  DateTime @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamp(6)
+}
+
+model Like {
+  id        BigInt   @id(map: "like_pk")
+  pic_id    String   @db.VarChar(21)
+  user_id   String   @db.VarChar(21)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+}
+
+model Report {
+  id        String   @id(map: "report_pk") @db.VarChar(21)
+  user_id   String   @db.VarChar(21)
+  type      Int
+  content   String?  @db.VarChar(500)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+}
